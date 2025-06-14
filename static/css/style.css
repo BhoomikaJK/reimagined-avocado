@@ -1,130 +1,316 @@
 /* style.css */
 
+/* Suggested Color Palette & Fonts */
+/* Primary: Hot Pink (#FF69B4) */
+/* Secondary: Electric Blue (#00FFFF) */
+/* Accent 1: Lime Green (#32CD32) */
+/* Accent 2: Dark Purple (#6A0DAD) */
+/* Background: Deep Grey (#1a1a1a) */
+
+/* Font Definitions */
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Press+Start+2P&family=Roboto+Mono&display=swap');
+
 body {
-font-family: 'Roboto Mono', monospace;
-background-color: \#333333;
-color: \#f0f0f0;
-margin: 0;
-padding: 20px;
+    font-family: 'Roboto Mono', monospace;
+    background: linear-gradient(135deg, #1a1a1a, #333333, #1a1a1a); /* Subtle gradient background */
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite; /* Animated background */
+    color: #e0e0e0; /* Lighter text color for better contrast */
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scroll from animations */
+}
+
+/* Keyframe for background animation */
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 header {
-text-align: center;
-padding: 30px 0;
-margin-bottom: 30px;
-border-bottom: 2px dashed \#FF69B4;
+    text-align: center;
+    padding: 40px 0;
+    margin-bottom: 50px;
+    border-bottom: 3px dashed #FF69B4;
+    position: relative;
+    overflow: hidden;
+}
+
+header::before { /* Decorative element for header */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0,255,255,0.1) 0%, rgba(0,255,255,0) 70%);
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 h1, h2 {
-font-family: 'Bangers', cursive;
-color: \#00FFFF;
-text-shadow: 2px 2px \#FF69B4;
+    font-family: 'Bangers', cursive;
+    color: #00FFFF; /* Electric Blue */
+    text-shadow: 4px 4px #FF69B4; /* Hot Pink */
+    letter-spacing: 2px;
+    margin-bottom: 15px;
 }
 
-\#friends {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-gap: 30px;
-margin-bottom: 40px;
+h1 {
+    font-size: 3.5em;
+}
+
+h2 {
+    font-size: 2.5em;
+    text-align: center;
+    margin-top: 60px;
+    margin-bottom: 30px;
+    text-shadow: 3px 3px #32CD32; /* Lime Green */
+}
+
+#friends {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Slightly larger cards */
+    gap: 40px; /* Increased gap */
+    margin-bottom: 60px;
+    padding: 0 20px;
 }
 
 .friend-card {
-background-color: \#444444;
-padding: 20px;
-border-radius: 8px;
-text-align: center;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-position: relative;
-overflow: hidden;
-border: 2px solid \#FF69B4;
+    background-color: #2b2b2b; /* Slightly lighter than body background */
+    padding: 25px;
+    border-radius: 12px; /* More rounded corners */
+    text-align: center;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+    transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out, border-color 0.4s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid transparent; /* Transparent border for initial state */
+    background-clip: padding-box;
+}
+
+/* Gradient Border for friend cards */
+.friend-card::before {
+    content: '';
+    position: absolute;
+    top: -webkit-calc(-1 * var(--card-border-width));
+    left: -webkit-calc(-1 * var(--card-border-width));
+    width: calc(100% + var(--card-border-width) * 2);
+    height: calc(100% + var(--card-border-width) * 2);
+    background: linear-gradient(60deg, #FF69B4, #00FFFF, #32CD32, #6A0DAD, #FF69B4, #00FFFF);
+    background-size: 300% 300%;
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.4s ease, background-position 0.4s ease;
+    filter: blur(8px); /* Subtle glow effect */
+}
+
+.friend-card:hover::before {
+    opacity: 1;
+    animation: borderGradient 3s linear infinite;
+}
+
+@keyframes borderGradient {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
 }
 
 .friend-card:hover {
-transform: translateY(-5px);
-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
-border-color: \#00FFFF;
+    transform: translateY(-8px) scale(1.02); /* Pop out effect */
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6), 0 0 20px #00FFFF; /* Stronger shadow with neon glow */
 }
 
 .friend-card img {
-width: 100px;
-height: 100px;
-border-radius: 50%;
-object-fit: cover;
-margin-bottom: 10px;
-border: 2px solid \#32CD32;
+    width: 120px; /* Slightly larger images */
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 4px solid #32CD32; /* Lime Green border */
+    box-shadow: 0 0 15px rgba(50, 205, 50, 0.5); /* Matching glow for image border */
+    transition: transform 0.3s ease-in-out;
+}
+
+.friend-card:hover img {
+    transform: rotate(5deg); /* Slight rotation on hover */
 }
 
 .friend-card h2 {
-color: \#32CD32;
-margin-top: 0;
-margin-bottom: 5px;
-font-size: 1.5em;
+    color: #32CD32; /* Lime Green */
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.8em;
+    text-shadow: 2px 2px #6A0DAD; /* Dark Purple */
+    transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+
+.friend-card:hover h2 {
+    color: #00FFFF; /* Electric Blue on hover */
+    text-shadow: 2px 2px #FF69B4; /* Hot Pink on hover */
 }
 
 .friend-card .description {
-font-size: 0.9em;
-color: \#cccccc;
+    font-size: 1em;
+    color: #c0c0c0;
+    transition: color 0.3s ease-in-out;
 }
 
-\#gallery {
-margin-bottom: 50px;
-text-align: center;
+.friend-card:hover .description {
+    color: #e0e0e0;
+}
+
+#gallery {
+    margin-bottom: 70px;
+    padding: 0 20px;
 }
 
 .gallery-grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-gap: 15px;
-margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Larger gallery items */
+    gap: 20px;
+    margin-top: 30px;
 }
 
 .gallery-grid img {
-width: 100%;
-height: auto;
-border-radius: 5px;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-transition: transform 0.3s ease-in-out;
+    width: 100%;
+    height: 200px; /* Fixed height for consistency */
+    object-fit: cover; /* Cover the area, cropping if necessary */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 10px #FF69B4; /* Initial subtle glow */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border: 2px solid transparent; /* For hover effect */
 }
 
 .gallery-grid img:hover {
-transform: scale(1.05);
+    transform: scale(1.03) rotate(-2deg); /* Slight scale and rotation */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 25px #00FFFF; /* Stronger glow on hover */
+    border: 2px solid #00FFFF; /* Electric blue border on hover */
 }
 
 footer {
-text-align: center;
-padding-top: 20px;
-border-top: 2px dashed \#32CD32;
-color: \#777777;
-font-size: 0.8em;
+    text-align: center;
+    padding-top: 30px;
+    border-top: 3px dashed #6A0DAD; /* Dark Purple dashed line */
+    color: #999999;
+    font-size: 0.9em;
+    margin-top: 50px;
+    text-shadow: 1px 1px #1a1a1a;
 }
 
-\#random-roast-container {
-position: fixed;
-z-index: 10;
+/* Random Roast Popups */
+#random-roast-container {
+    position: fixed;
+    z-index: 1000; /* Ensure it's on top */
+    pointer-events: none; /* Allows clicks to pass through */
 }
 
 .random-roast {
-background-color: rgba(255, 105, 180, 0.9); /\* Hot Pink with transparency */
-color: \#333333;
-padding: 10px 15px;
-border-radius: 5px;
-font-size: 0.8em;
-white-space: nowrap;
-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-cursor: default; /* Indicate it's not interactive \*/
+    font-family: 'Press Start 2P', cursive; /* Pixelated font for roasts */
+    background-color: rgba(255, 105, 180, 0.95); /* Hot Pink with more opacity */
+    color: #1a1a1a; /* Dark text for contrast */
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 0.7em; /* Slightly larger for readability */
+    white-space: nowrap;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.4), 0 0 15px #FF69B4; /* Stronger shadow with pink glow */
+    animation: fadeInOut 4s forwards; /* Fade in and out animation */
+    position: absolute; /* Controlled by JS */
+    border: 2px solid #00FFFF; /* Electric blue border */
 }
 
-/\* Responsive Design \*/
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: scale(0.8) translateY(10px); }
+    10% { opacity: 1; transform: scale(1) translateY(0); }
+    90% { opacity: 1; transform: scale(1) translateY(0); }
+    100% { opacity: 0; transform: scale(0.8) translateY(-10px); }
+}
+
+/* Tooltip on hover over friend card */
+.tooltip {
+    font-family: 'Roboto Mono', monospace;
+    background-color: rgba(0, 255, 255, 0.95); /* Electric Blue with more opacity */
+    color: #1a1a1a;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 5; /* Above other content, below random roasts */
+    animation: tooltipFadeIn 0.3s ease-out forwards;
+    border: 1px solid #FF69B4; /* Hot Pink border */
+}
+
+@keyframes tooltipFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Confetti/Sparkle effect (basic visual concept) */
+.confetti {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: #FF69B4; /* Hot Pink */
+    border-radius: 50%;
+    opacity: 0;
+    animation: sparkle 1s forwards;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes sparkle {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+
+/* Responsive Design */
 @media (max-width: 768px) {
-\#friends {
-grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    h1 {
+        font-size: 2.5em;
+    }
+    h2 {
+        font-size: 1.8em;
+    }
+    #friends {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 25px;
+    }
+    .friend-card {
+        padding: 20px;
+    }
+    .friend-card img {
+        width: 100px;
+        height: 100px;
+    }
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+    }
+    .gallery-grid img {
+        height: 150px;
+    }
+    .random-roast {
+        font-size: 0.6em;
+        padding: 8px 12px;
+    }
 }
-.friend-card {
-padding: 15px;
-}
-.friend-card img {
-width: 80px;
-height: 80px;
-}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    h1 {
+        font-size: 2em;
+    }
+    h2 {
+        font-size: 1.5em;
+    }
+    #friends, #gallery {
+        padding: 0 10px;
+    }
 }
