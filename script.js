@@ -3,6 +3,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const friendCards = document.querySelectorAll('.friend-card');
     const roastContainer = document.getElementById('random-roast-container');
+    
+    // Extract all roasts from the data-roast attributes of the friend cards
     const roasts = Array.from(friendCards).map(card => card.dataset.roast);
 
     // Friend Card Hover Tooltips
@@ -11,15 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         card.addEventListener('mouseenter', () => {
             clearTimeout(tooltipTimeout); // Clear any previous timeout
-            const roastText = card.dataset.roast;
+            const roastText = card.dataset.roast; // Get the specific roast for this card
             if (roastText) {
                 const tooltip = document.createElement('div');
                 tooltip.classList.add('tooltip');
                 tooltip.textContent = roastText;
                 card.appendChild(tooltip);
 
-                // Position the tooltip dynamically
-                const cardRect = card.getBoundingClientRect();
+                // Position the tooltip dynamically above the card
                 tooltip.style.position = 'absolute';
                 tooltip.style.bottom = `${card.offsetHeight / 2 + 30}px`; // Adjust as needed
                 tooltip.style.left = '50%';
@@ -28,20 +29,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         card.addEventListener('mouseleave', () => {
+            // Add a small delay for mouseleave to prevent flickering
             tooltipTimeout = setTimeout(() => {
                 const tooltip = card.querySelector('.tooltip');
                 if (tooltip) {
                     tooltip.remove();
                 }
-            }, 200); // Small delay to prevent flickering
+            }, 200);
         });
     });
 
 
-    // Random Roast Popups
+    // Random Roast Popups (appears randomly across the screen)
     function createRandomRoast() {
-        if (roasts.length === 0) return; // Don't create if no roasts defined
+        // Ensure there are roasts available to display
+        if (roasts.length === 0) {
+            console.warn("Roasts array is empty. No random roasts to display.");
+            return;
+        }
 
+        // Select a random roast from the collected array
         const randomIndex = Math.floor(Math.random() * roasts.length);
         const roastText = roasts[randomIndex];
 
@@ -49,43 +56,55 @@ document.addEventListener('DOMContentLoaded', () => {
         roastElement.classList.add('random-roast');
         roastElement.textContent = roastText;
 
-        // Position the roast randomly across the screen, avoiding edges
-        const x = Math.random() * (window.innerWidth - 250); // Adjust 250 for roast width
-        const y = Math.random() * (window.innerHeight - 100); // Adjust 100 for roast height
+        // Calculate random position within the viewport
+        // Adjust values to prevent roasts from going off-screen (approx. roast width/height)
+        const x = Math.random() * (window.innerWidth - 250);
+        const y = Math.random() * (window.innerHeight - 100);
 
         roastElement.style.left = `${x}px`;
         roastElement.style.top = `${y}px`;
 
-        roastContainer.appendChild(roastElement);
-
-        // Make the roast disappear after its animation
+        // Append to the container if it exists
+        if (roastContainer) {
+            roastContainer.appendChild(roastElement);
+        } else {
+            console.error("Cannot append roast: #random-roast-container is null. Check index.html.");
+            return; // Exit if container isn't found
+        }
+        
+        // Remove the roast element after its CSS animation ends
         roastElement.addEventListener('animationend', () => {
             roastElement.remove();
         });
     }
 
-    // Create a random roast every 5 to 10 seconds
-    let roastInterval = setInterval(createRandomRoast, 7000 + Math.random() * 3000); // 7-10 seconds
+    // Initialize the random roast functionality
+    // Create one immediately on load for initial visibility
+    createRandomRoast();
 
-    // Optional: Add a subtle click effect with confetti/sparkles
+    // Set an interval to continuously create random roasts
+    // Interval between 7 to 10 seconds for varied timing
+    let roastInterval = setInterval(createRandomRoast, 7000 + Math.random() * 3000); 
+
+    // Optional: Improve performance by clearing interval when window is not in focus
+    window.addEventListener('blur', () => {
+        clearInterval(roastInterval);
+    });
+    window.addEventListener('focus', () => {
+        // Re-establish interval with new random timing
+        roastInterval = setInterval(createRandomRoast, 7000 + Math.random() * 3000);
+    });
+
+    // You can uncomment and expand on this if you want click-based effects
+    // For a simple CSS sparkle, you might just append a div and let CSS animate it
+    /*
     document.body.addEventListener('click', (event) => {
-        // You can uncomment and expand on this if you want click-based effects
-        // For a simple CSS sparkle, you might just append a div and let CSS animate it
-        /*
         const sparkle = document.createElement('div');
         sparkle.classList.add('confetti'); // Use the .confetti class for a simple visual
         sparkle.style.left = `${event.clientX}px`;
         sparkle.style.top = `${event.clientY}px`;
         document.body.appendChild(sparkle);
         setTimeout(() => sparkle.remove(), 1000); // Remove after animation
-        */
     });
-
-    // Reset roast interval on window focus/blur (optional, for better performance)
-    window.addEventListener('blur', () => {
-        clearInterval(roastInterval);
-    });
-    window.addEventListener('focus', () => {
-        roastInterval = setInterval(createRandomRoast, 7000 + Math.random() * 3000);
-    });
+    */
 });
